@@ -75,3 +75,6 @@ ReactDOM.render(<App />, document.getElementById("root"));
 
 Then make this first component, `App.js`. If webpack can't render hello world make sure you have a `.babelrc` file set up.
 
+### Rendering Arrays from React State (some fake data)
+
+We will work with some fake data in the App.js component for now but we will later replace this with some data from our graphql API.
