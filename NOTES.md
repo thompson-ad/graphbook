@@ -62,3 +62,16 @@ To spin up our webpack dev server, we need to add some npm scripts to package.js
 running `npm run client`, will now spin up the dev-server. The browser is empty but if you inspect and go to the `sources` tab you will see that we already have a `bundle.js` and our `index.html` was taken as a template.
 
 ### Rendering React
+
+`index.js` is the main starting point. No business logic should be included in this file. It should only have this
+
+```JS
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+
+ReactDOM.render(<App />, document.getElementById("root"));
+```
+
+Then make this first component, `App.js`. If webpack can't render hello world make sure you have a `.babelrc` file set up.
+
