@@ -78,3 +78,12 @@ Then make this first component, `App.js`. If webpack can't render hello world ma
 ### Rendering Arrays from React State (some fake data)
 
 We will work with some fake data in the App.js component for now but we will later replace this with some data from our graphql API.
+
+### handling css
+
+You can use CSS in JS or standard CSS. This project will use standard CSS.
+
+we have set up webpack to handle css. the style-loader injects your bundles css right into the DOM.
+
+However we must now import the CSS into our App. Instead of adding the css to the head tag of index.html we can import it in the `App.js`. Webpack will then minify and bundle our CSS too.
+
