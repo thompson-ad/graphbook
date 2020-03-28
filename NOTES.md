@@ -181,3 +181,19 @@ important middleware:
 -compression
 -cors
 -helmet
+
+### combining express with apollo
+
+install `apollo-server-express` `graphql` and `graphql-tools`.
+
+Apollo offers an express.js specific package that integrates itself into the web server. In some scenarios, you may want to offer non-graphql routes.
+
+import required gql packages.
+
+import resolvers and schema.
+
+The GraphQL schema is the representation of the API, that is, the data and function a client can request or run. Resolver functions are the implementation of the Schema. Both need to match 100%.
+
+The `makeExecutableSchema` function from graphql-tools package merges the graphql schema and the resolver functions.
+
+We pass this as a `schema` parameter to the Apollo Server. The context property of which contains the `request` object of Express.js so that we can access the request object in our resolver functions if we need to.
