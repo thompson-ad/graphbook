@@ -87,3 +87,5 @@ we have set up webpack to handle css. the style-loader injects your bundles css 
 
 However we must now import the CSS into our App. Instead of adding the css to the head tag of index.html we can import it in the `App.js`. Webpack will then minify and bundle our CSS too.
 
+### event handling and state updates with React
+
