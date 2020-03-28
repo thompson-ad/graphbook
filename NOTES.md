@@ -93,5 +93,27 @@ However we must now import the CSS into our App. Instead of adding the css to th
 
 It is crucial to be able to control your document heads. You might want to change the title or description based on the content you are presenting.
 
-You can add all  standardHTML headers with React Helmet.
+You can add all standardHTML headers with React Helmet.
+
+### Webpack production build
+
+The last step for our React setup is to have a production build. Until now, we were only using `webpack-dev-server`, but this naturally includes an unimproved development build. Furthermore, webpack automatically spawns a web-server. In a later chapter, we introduce express as our web server so we won't need webpack to host it.
+
+`npm install --save-dev mini-css-extract-plugin`
+
+`"client:build": "webpack --config webpack.client.build.config.js"`
+
+add `webpack.client.build.config.js`.
+
+Change
+
+- mode to be production
+- require mini-css plugin
+- replace current css rule
+- remove entire dev-server property.
+
+when running `npm run client:build` it will create a production ready JS and CSS bundle. 
+
+This is  the end of the basic react set-up.
+
 
