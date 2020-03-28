@@ -163,3 +163,9 @@ in express, one path can respond to different HTTP methods and can have multiple
 A path can be a simple string but also a regex if needed.
 
 if you pass multiple handler functions, be sure to pass `next` and you can hand over the execution of one handler function to the next.
+
+### serving our production build
+
+We can serve our production build of the front end through express.js. This approach is not great for development purposes but is useful for testing the build process and seeing how our live application will act.
+
+
