@@ -217,3 +217,45 @@ now that the schema is ready we need the matching resolver functions.
 the resolver must match to schema.
 
 the posts query returns an empty array at the moment but that is enough to start the server.
+
+### sending graphql queries
+
+you can test the function by sending the following JSON as a POST request to http://localhost:8000/graphql
+
+```JSON
+{
+    "operationName": null,
+    "query": "{
+        posts {
+            id
+            text
+        }
+    }",
+    "variables": {}
+}
+```
+
+the operation name field is not required but it is great for logging purposes.
+
+this query is a JSON-like representation of the query we want to execute.
+
+in this example, we run the `RootQuery` `posts` and request the `id` and `text` field of every post.
+
+We do not need to specify `RootQuery` because it is the highest layer of out graphql API.
+
+if you are not used to Postman there is an option to open `http://localhost:8000/graphql` and use the graphql playground.
+
+you must ensure that helmet is only activated in production though.
+
+then just try
+
+```JSON
+{
+  posts {
+    id
+    text
+  }
+}
+```
+
+We also want to respond with the fake data from `App.js`. Add the posts array above the resolver and run the request again. Note that there is no user...
