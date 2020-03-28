@@ -126,3 +126,19 @@ This is the end of the basic react set-up.
 
 - `"stats":`
 - `"analyze":`
+
+## Setting Up GraphQL with Express.js
+
+- Express.js installation 
+- Routing in Express.js
+- Binding Apollo Server to GrraphQL endpoint
+- Serving static assets with express
+- backend debugging and logging
+
+### Node.js and Express.js
+
+- Set up a GraphQL API that is consumed bu our frontend
+- To accept network requests, we are going to set up a webserver
+
+`npm install --save express`
+
