@@ -129,7 +129,7 @@ This is the end of the basic react set-up.
 
 ## Setting Up GraphQL with Express.js
 
-- Express.js installation 
+- Express.js installation
 - Routing in Express.js
 - Binding Apollo Server to GrraphQL endpoint
 - Serving static assets with express
@@ -142,3 +142,14 @@ This is the end of the basic react set-up.
 
 `npm install --save express`
 
+### Running Express.js in Development
+
+To launch the server we need to add a script.
+
+install nodemon
+
+install `@babel/node` to transpile the backend
+
+now run `npm run server`.
+
+Go to `http://localhost:8000` you will see hello world

@@ -8,6 +8,7 @@
     "client:build": "webpack --config webpack.client.build.config.js",
     "stats": "webpack --profile --json --config webpack.client.build.config.js > stats.json",
     "analyze": "webpack-bundle-analyzer stats.json",
+    "server": "nodemon --exec babel-node --watch src/server src/server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Aaron Thompson",
@@ -16,10 +17,12 @@
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-helmet": "^5.2.1",
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "nodemon": "^1.18.7"
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
+    "@babel/node": "^7.8.7",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-decorators": "^7.1.6",
     "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
