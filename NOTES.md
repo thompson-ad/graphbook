@@ -209,3 +209,11 @@ For our GraphQL server we need a type of RootQuery. The RootQuery type wraps all
 The first query we will have is going to return an array of all the posts we have got.
 
 At the end we add the RootQuery to the schema property this type is the starting point for the Apollo server.
+
+### writing first resolver
+
+now that the schema is ready we need the matching resolver functions.
+
+the resolver must match to schema.
+
+the posts query returns an empty array at the moment but that is enough to start the server.
