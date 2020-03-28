@@ -24,7 +24,8 @@
     "nodemon": "^1.18.7",
     "compression": "^1.7.3",
     "cors": "^2.8.5",
-    "helmet": "^3.15.0"
+    "helmet": "^3.15.0",
+    "winston": "^3.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
