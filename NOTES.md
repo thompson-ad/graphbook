@@ -197,3 +197,15 @@ The GraphQL schema is the representation of the API, that is, the data and funct
 The `makeExecutableSchema` function from graphql-tools package merges the graphql schema and the resolver functions.
 
 We pass this as a `schema` parameter to the Apollo Server. The context property of which contains the `request` object of Express.js so that we can access the request object in our resolver functions if we need to.
+
+### Writing a graphql schema
+
+The schema in schema.js is a basic schema which would at least be able to serve the fake posts array from chapter 1 excluding the users.
+
+First we define a new type called Post. Post has an id of type int and text which is a string.
+
+For our GraphQL server we need a type of RootQuery. The RootQuery type wraps all of the queries a client can run.
+
+The first query we will have is going to return an array of all the posts we have got.
+
+At the end we add the RootQuery to the schema property this type is the starting point for the Apollo server.
