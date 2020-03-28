@@ -1,3 +1,5 @@
+import logger from "../../helpers/logger";
+
 const posts = [
   {
     id: 2,
@@ -23,10 +25,6 @@ const resolvers = {
       return posts;
     }
   },
-
-  // the resolver extracts the post and user objects from the mutations parameters which are passed in the second argument of the function
-  // Then, we build the postObject variable
-  // the postObject variable now looks like a post from the fake data now
   RootMutation: {
     addPost(root, { post, user }, context) {
       const postObject = {
@@ -35,6 +33,7 @@ const resolvers = {
         id: posts.length + 1
       };
       posts.push(postObject);
+      logger.log({ level: "info", message: "Post was created" });
       return postObject;
     }
   }

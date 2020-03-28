@@ -312,3 +312,17 @@ you can run this mutation via your preferred http client:
 ```
 
 here we are using variables to send our data which we denote with a \$ and include in our query string.
+
+### backend debugging and logging
+
+the most popular logging package for NodeJS is called `winston`.
+
+we create logger.js and this file can be imported everywhere we want to log.
+
+the file defines transports for winston. a transport is nothing more than the way in which winston separates and saves various log types in different files.
+
+the first transport layer generates an error.log file where only real errors are saved.
+
+The second transport is a combined log where we save all other log messages such as warnings or info logs.
+
+if we are running the server in a dev environment we add a third where all messages are directly logged to console.
