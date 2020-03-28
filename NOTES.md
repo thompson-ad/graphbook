@@ -89,3 +89,9 @@ However we must now import the CSS into our App. Instead of adding the css to th
 
 ### event handling and state updates with React
 
+### react helmet for document heads
+
+It is crucial to be able to control your document heads. You might want to change the title or description based on the content you are presenting.
+
+You can add all  standardHTML headers with React Helmet.
+

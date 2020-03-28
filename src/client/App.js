@@ -1,7 +1,7 @@
 import React, { Component } from "react";
+import { Helmet } from "react-helmet";
 import "../../assets/css/style.css";
 
-// some fake post data
 const posts = [
   {
     id: 2,
@@ -27,18 +27,9 @@ export default class App extends Component {
     postContent: ""
   };
 
-  // we need a function that handle the internal react state of the post content since the components state is not directly linked to the DOM
   handlePostContentChange = event => {
     this.setState({ postContent: event.target.value });
   };
-
-  // older way is like
-  // handlePostContentChange(event) {
-  //   this.setState({ postContent: event.target.value });
-  // }
-
-  // in the constructor
-  // this.handlePostContentChange = this.handlePostContentChange.bind(this)
 
   handleSubmit = event => {
     event.preventDefault();
@@ -50,7 +41,6 @@ export default class App extends Component {
         username: "Fake User"
       }
     };
-    // this is an update function
     this.setState(prevState => ({
       posts: [newPost, ...prevState.posts],
       postContent: ""
@@ -61,9 +51,16 @@ export default class App extends Component {
     const { posts, postContent } = this.state;
     return (
       <div className="container">
+        {/* When React has finished render, the new document head is applied */}
+        <Helmet>
+          <title>Graphbook - Feed</title>
+          <meta
+            name="description"
+            content="Newsfeed of all your friends on Graphbook"
+          />
+        </Helmet>
         <div className="postForm">
           <form onSubmit={this.handleSubmit}>
-            {/* we are passing the postContent variable to the value property of the text area to have what is called a controlled component */}
             <textarea
               value={postContent}
               onChange={this.handlePostContentChange}
