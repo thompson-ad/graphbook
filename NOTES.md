@@ -153,3 +153,13 @@ install `@babel/node` to transpile the backend
 now run `npm run server`.
 
 Go to `http://localhost:8000` you will see hello world
+
+### Routing in Express.js
+
+Routing stands for how an application responds to specific endpoints and methods.
+
+in express, one path can respond to different HTTP methods and can have multiple handler functions. These handler functions are executed one by one in order that they are defined.
+
+A path can be a simple string but also a regex if needed.
+
+if you pass multiple handler functions, be sure to pass `next` and you can hand over the execution of one handler function to the next.
