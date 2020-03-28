@@ -112,8 +112,17 @@ Change
 - replace current css rule
 - remove entire dev-server property.
 
-when running `npm run client:build` it will create a production ready JS and CSS bundle. 
+when running `npm run client:build` it will create a production ready JS and CSS bundle.
 
-This is  the end of the basic react set-up.
+This is the end of the basic react set-up.
 
+### Useful Development Tools
 
+- Chrome react developer tools
+
+- webpack bundle analyser
+
+`npm install --save-dev webpack-bundle-analyser`
+
+- `"stats":`
+- `"analyze":`
