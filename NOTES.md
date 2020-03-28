@@ -278,3 +278,37 @@ the exentded query then looks like:
     }
 }"
 ```
+
+### Writing your first graphql mutation
+
+in the same way that the front end was able to add posts, we can realise this in the backend with mutations.
+
+you can run this mutation via your preferred http client:
+
+```JSON
+{
+    "operationName": null,
+    "query": "mutation addPost($post: PostInput!, $user: UserInput!) {
+        addPost(post: $post, user: $user) {
+            id
+            text
+            user {
+                username
+                avatar
+            }
+        }
+    }",
+    "variables": {
+        "post": {
+            "text": "you just added a post"
+        },
+        "user": {
+            "avatar": "/uploads/avatar2.png",
+            "username": "fake user"
+        }
+    }
+}
+
+```
+
+here we are using variables to send our data which we denote with a \$ and include in our query string.
