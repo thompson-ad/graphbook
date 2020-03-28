@@ -168,4 +168,16 @@ if you pass multiple handler functions, be sure to pass `next` and you can hand 
 
 We can serve our production build of the front end through express.js. This approach is not great for development purposes but is useful for testing the build process and seeing how our live application will act.
 
+### express middleware
 
+Every middleware function receives a res, req and next.
+
+middleware allows us to pre or post process the request or response object.
+
+Express can have multiple routes for the same path and HTTP method. middleware can help decide which one to use.
+
+important middleware:
+
+-compression
+-cors
+-helmet
