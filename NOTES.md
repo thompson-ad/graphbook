@@ -259,3 +259,22 @@ then just try
 ```
 
 We also want to respond with the fake data from `App.js`. Add the posts array above the resolver and run the request again. Note that there is no user...
+
+### multiple types in Graphql Schemas
+
+we need to include a user field in our post type. Setting this equal to the User type allows us to have a sub-object inside our posts with the post's auhtor infromation
+
+the exentded query then looks like:
+
+```JSON
+"query": "{
+    posts {
+        id
+        text
+        user {
+            avatar
+            name
+        }
+    }
+}"
+```
