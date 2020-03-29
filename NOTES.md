@@ -385,3 +385,33 @@ The first step is to initialise the connection from Sequelize to out MySQL Serve
 the previous setup is fine but it is not ideal for later deployment
 
 The best option is to have a configuration file that is read and used according to the environment that the server is running on.
+
+### writing db models
+
+after creating a connection to mysql via sequelise, we want to use it. However, our db is missing a table or structure that we can query or manipulate.
+
+We currently have 2 graphql entities: `User` and `Post`.
+
+Sequelize let's us create a database schema for each of our graphql entities.
+
+The schema is validated when inserting ot updating rows in our db.
+
+We already wrote a schema for the graphql layer in `schema.js`, but we also need one for the database.
+
+The field types, as well as the fields themselves can differ between db layer and graphql. Perhaps you do not want to export all data from your database through the API. Or maybe you generate data for your graphql API on the fly.
+
+`npm install -g sequelize-cli` - to be able to run sequelize commands from your terminal.
+
+The Sequelize CLI allows us to generate the model automatically.
+
+`sequelize model:generate --models-path src/server/models --migrations-path src/server/migrations --name Post --attributes text:text`
+
+this creates a model and a migration file
+
+migrations allow us to track database changes through our regular version control system.
+
+our first migration file creates a post table and adds all required columns.
+
+`sequelize db:migrate --migrations-path src/server/migrations --config src/server/config/index.js`
+
+After running this migration you will see a Posts table inside of sequel pro.
