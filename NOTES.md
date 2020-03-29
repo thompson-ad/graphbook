@@ -378,4 +378,10 @@ the mysql2 package allows sequelize to speak with your sql server.
 
 Sequelize is just a wrapper around the different libraries for the different database systems.
 
-The first step is to initialise the connection from Sequelize  to out MySQL Server.
+The first step is to initialise the connection from Sequelize to out MySQL Server.
+
+### config file with sequelize
+
+the previous setup is fine but it is not ideal for later deployment
+
+The best option is to have a configuration file that is read and used according to the environment that the server is running on.
