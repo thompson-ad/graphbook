@@ -326,3 +326,42 @@ the first transport layer generates an error.log file where only real errors are
 The second transport is a combined log where we save all other log messages such as warnings or info logs.
 
 if we are running the server in a dev environment we add a third where all messages are directly logged to console.
+
+## Connecting to the Database
+
+Our front end and backend can communicate with fake data. The next step on the list os to use a database to store 'real' data.
+
+We want our backend to persist data to out SQL database by using sequelize. Our Apollo server will use this data for queries and mutations.
+
+In order for this to happen we must implement database models for our graphql entities.
+
+We are about to:
+
+- use datatbases with gql
+- use sequelize with node.js
+- write db models
+- perform db migrations
+- seed data with sequelize
+- use apollo with sequelize
+
+### Using databases in GraphQL
+
+Graphql is a protocol for sending and retrieving data, Apollo is one of the many libraries that you can use to implement that protocol.
+
+GraphQL (in its specs) nor Apollo work directly with the data layer. The database logic that you use does not matter to Apollo. The only thing that matters to Apollo is that the data matches the Schema.
+
+For this app we will use SQL, via Sequelize.
+
+https://sequelpro.com/docs/ref/mysql/install-on-osx
+
+Follow the tutorial here:
+
+https://www.sqlbot.co/blog/sequel-pro-review-and-tutorial
+
+We will install MySQL with MAMP and connect to it using sequel pro.
+
+Sequel Pro is an open source, native application for mac. It gives you direct access to MySQL databases on remote or local servers.
+
+MAMP provides an all in one local MySQL Server environment for Mac.
+
+MAMP provides the server and Sequel pro helps us manage it.
