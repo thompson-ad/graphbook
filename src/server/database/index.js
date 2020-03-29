@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import configFile from "../config";
-// We use the NODE_ENV environment variable to get the environment that the server is running in.
-// we read the config file and pass the correct configuration to the sequelize instance.
+import models from "../models";
+
 const env = process.env.NODE_ENV || "development";
 const config = configFile[env];
 
@@ -14,6 +14,7 @@ const sequelize = new Sequelize(
 );
 
 const db = {
+  models: models(sequelize),
   sequelize
 };
 

@@ -415,3 +415,8 @@ our first migration file creates a post table and adds all required columns.
 `sequelize db:migrate --migrations-path src/server/migrations --config src/server/config/index.js`
 
 After running this migration you will see a Posts table inside of sequel pro.
+
+### Importing models with Sequelise
+
+we want to import all of our database models at once, in a central file.
+
