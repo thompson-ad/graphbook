@@ -1,22 +1,20 @@
 import Sequelize from "sequelize";
+import configFile from "../config";
+// We use the NODE_ENV environment variable to get the environment that the server is running in.
+// we read the config file and pass the correct configuration to the sequelize instance.
+const env = process.env.NODE_ENV || "development";
+const config = configFile[env];
 
-//  pass the db name as the first parameter
-// then username and password for local dev user
-// then a bunch of standard config, inlcudintthe host.
-// generally it is a good idea to not use operator Aliases to avoid SQL injections.
-// the pool options tells sequelize the connection config for every db connection
-// this tell sequelize it should not mantain any connections but require a new one every time it is needed.
-// idle specifies how long a connection will be mantained if it is not used.
-const sequelize = new Sequelize("graphbook_dev", "root", "root", {
-  host: "localhost",
-  dialect: "mysql",
-  operatorsAliases: false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-});
+const sequelize = new Sequelize(
+  config.database,
+  config.username,
+  config.password,
+  config
+);
 
-export default sequelize;
+const db = {
+  sequelize
+};
+
+// the instance is then exported for use in out app in a special db object
+export default db;
