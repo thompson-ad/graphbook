@@ -365,3 +365,17 @@ Sequel Pro is an open source, native application for mac. It gives you direct ac
 MAMP provides an all in one local MySQL Server environment for Mac.
 
 MAMP provides the server and Sequel pro helps us manage it.
+
+### integrating and connecting sequelize
+
+now we want to integrate our SQL server with our node.js backend.
+
+Sequelize is an ORM for Node.js it supports MySQL, PostgreSQL, SQLite abd MSSQL.
+
+install sequelize and mysql2.
+
+the mysql2 package allows sequelize to speak with your sql server.
+
+Sequelize is just a wrapper around the different libraries for the different database systems.
+
+The first step is to initialise the connection from Sequelize  to out MySQL Server.
