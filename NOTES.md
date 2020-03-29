@@ -420,3 +420,14 @@ After running this migration you will see a Posts table inside of sequel pro.
 
 we want to import all of our database models at once, in a central file.
 
+### Seeding data with sequelize
+
+we should fill th Posts table with our fake data. To accomplish this we will use seeders.
+
+`sequelize seed:generate --name fake-posts --seeders-path src/server/seeders`
+
+seeders are great for importing test data
+
+execute all seeders using the following:
+
+`sequelize db:seed:all --seeders-path src/server/seeders --config src/server/config/index.js`
