@@ -3,8 +3,16 @@ import path from "path";
 import helmet from "helmet";
 import cors from "cors";
 import compress from "compression";
-import services from "./services";
+// this returns a function
+import servicesLoader from "./services";
 import db from "./database";
+
+// this utils object hold all the utilities that our services might need access to.
+const utils = {
+  db
+};
+
+const services = servicesLoader(utils);
 
 const root = path.join(__dirname, "../../");
 const app = express();

@@ -431,3 +431,13 @@ seeders are great for importing test data
 execute all seeders using the following:
 
 `sequelize db:seed:all --seeders-path src/server/seeders --config src/server/config/index.js`
+
+### using sequelize with Apollo
+
+The db object is initialised upon starting the server within the root `index.js`.
+
+We pass it from this global location down to the spots where we rely on it.
+
+The services that we want to publicise through out graphql API need access to our MySQl datatbase.
+
+To pass the database down to our graphQL resolvers, we create a new object in the server index.js file
