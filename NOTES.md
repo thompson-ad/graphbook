@@ -441,3 +441,39 @@ We pass it from this global location down to the spots where we rely on it.
 The services that we want to publicise through out graphql API need access to our MySQl datatbase.
 
 To pass the database down to our graphQL resolvers, we create a new object in the server index.js file
+
+### one to one relationships with sql
+
+we need to associate each post with a user. A post has to have an author.
+
+First generate user model and migration
+
+`sequelize model:generate --models-path src/server/models --migrations-path src/server/migrations --name User --attributes avatar:string,username:string`
+
+We have to write a third migration, adding the userID column to our Post table, but also including it in our db Post model.
+
+`sequelize migration:create --migrations-path src/server/migrations --name add-userId-to-post`
+
+rerun the migration after filling it out:
+
+`sequelize db:migrate --migrations-path src/server/migrations --config src/server/config/index.js`
+
+If you receive an error when running migrations, you can easily undo them as follows:
+
+`sequelize db:migrate:undo --migrations-path src/server/migrations --config src/server/config/index.js`
+
+this undoes the most recent migrations.
+
+This completes establishing the db relationship, but sequelize must know about the relationship too.
+
+### Seeding foreign key data
+
+`sequelize seed:generate --name fake-user --seeders-path src/server/seeders`
+
+seeing as we created posts and users out of sync and have a foreign key constraint we will need to undo all seeds:
+
+`sequelize db:seed:undo:all --seeders-path src/server/seeders --config src/server/config/index.js`
+
+adjust the fake-user seeder timestamp to before the posts one and re-run:
+
+`sequelize db:seed:all --seeders-path src/server/seeders --config src/server/config/index.js`
