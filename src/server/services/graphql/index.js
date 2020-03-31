@@ -3,14 +3,21 @@ import { makeExecutableSchema } from "graphql-tools";
 import Resolvers from "./resolvers";
 import Schema from "./schema";
 
-const executableSchema = makeExecutableSchema({
-  typeDefs: Schema,
-  resolvers: Resolvers
-});
+// again, we surrounded everything here with a function that accepts the utils object
+// we need access to the database within our resolvers.
 
-const server = new ApolloServer({
-  schema: executableSchema,
-  context: ({ req }) => req
-});
+export default utils => {
+  const executableSchema = makeExecutableSchema({
+    typeDefs: Schema,
+    // .call makes it so that the scope of the resolvers is the utils object
+    // so, within resolvers, accessing 'this' gives us utils.
+    resolvers: Resolvers.call(utils)
+  });
 
-export default server;
+  const server = new ApolloServer({
+    schema: executableSchema,
+    context: ({ req }) => req
+  });
+
+  return server;
+};
