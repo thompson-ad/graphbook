@@ -2,14 +2,10 @@ import logger from "../../helpers/logger";
 
 export default function resolver() {
   const { db } = this;
-  const { Post } = db.models;
+  const { Post, User } = db.models;
 
   const resolvers = {
     Post: {
-      // Posts and Users are two separate tables connected by a foreign key.
-      // Previously the RootQuery could return everything we needed as all the information was in one big object
-      // now, a second query is needed to collect all necessary data for a complete response
-      // This is where the Post entity here comes in
       user(post, args, context) {
         return post.getUser();
       }
@@ -20,15 +16,22 @@ export default function resolver() {
       }
     },
     RootMutation: {
-      addPost(root, { post, user }, context) {
-        const postObject = {
-          ...post,
-          user,
-          id: post.length + 1
-        };
-        post.push(postObject);
-        logger.log({ level: "info", message: "Post was created" });
-        return postObject;
+      addPost(root, { post }, context) {
+        logger.log({
+          level: "info",
+          message: "Post was created"
+        });
+        // we retrieve all users from the db
+        return User.findAll().then(users => {
+          const usersRow = users[0];
+          // we insert the post into our db with create. We pass the post object from the original request, which only holds the test of the post.
+          return Post.create({
+            ...post
+            // Set the userId on the post
+          }).then(newPost =>
+            Promise.all([newPost.setUser(usersRow.id)]).then(() => newPost)
+          );
+        });
       }
     }
   };

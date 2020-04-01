@@ -477,3 +477,34 @@ seeing as we created posts and users out of sync and have a foreign key constrai
 adjust the fake-user seeder timestamp to before the posts one and re-run:
 
 `sequelize db:seed:all --seeders-path src/server/seeders --config src/server/config/index.js`
+
+### mutating data sequelize
+
+Requesting data from our db via graphql now works. Now comes the tough part, adding a post.
+
+Currently we have no authentication to identify the user that is creating the post. We will fake this step for now.
+
+Test the addPost mutation
+
+```JSON
+mutation addPost($post : PostInput!) {
+    addPost(post : $post) {
+      id
+      text
+      user {
+        username
+        avatar
+      }
+    }
+  }
+
+
+// Variables
+
+
+  {
+  "post": {
+    "text": "You just added a post"
+  }
+}
+```
