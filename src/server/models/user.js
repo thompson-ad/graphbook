@@ -8,8 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   User.associate = function(models) {
-    // the has many means the exact opposite of belongs to. Every user can have multiple posts
     User.hasMany(models.Post);
+    User.belongsToMany(models.Chat, { through: "users_chats" });
   };
   return User;
 };
