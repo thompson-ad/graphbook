@@ -576,3 +576,30 @@ you should now be able to query for an empty field of chats
   }
 }
 ```
+
+### seeding many to many
+
+Testing requires data in the db. We have three new tables so need three new seeders.
+
+Starting with chats:
+
+`sequelize seed:generate --name fake-chats --seeders-path src/server/seeders`
+
+next insert the relation between two users and the new chat
+
+we do this by creating 2 entries in the users_chats table where we reference them
+
+`sequelize seed:generate --name fake-chats-users-relations --seeders-path src/server/seeders`
+
+generate seed file for messages
+
+`sequelize seed:generate --name fake-messages --seeders-path src/server/seeders`
+
+now run all the seeds
+
+`sequelize db:seed:all --seeders-path src/server/seeders --config src/server/config/index.js`
+
+now run the chats query again!
+
+We also want to be able to query for just one chat.
+

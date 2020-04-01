@@ -42,6 +42,7 @@ const typeDefinitions = `
   type RootQuery {
     posts: [Post]
     chats: [Chat]
+    chat(chatId: Int): Chat
   }
 
   schema {
