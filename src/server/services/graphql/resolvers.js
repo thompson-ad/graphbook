@@ -85,6 +85,37 @@ export default function resolver() {
             Promise.all([newPost.setUser(usersRow.id)]).then(() => newPost)
           );
         });
+      },
+      addChat(root, { chat }, context) {
+        logger.log({
+          level: "info",
+          message: "Message was created"
+        });
+        return Chat.create().then(newChat =>
+          // sequelize added the setUsers function to the chat model instance
+          // it was added because of the associations using the belongsToMany method in the chat model
+          // There we can directly provide an array of user ids that should be associated with the new chat, through the users_chats table
+          Promise.all([newChat.setUsers(chat.users)]).then(() => newChat)
+        );
+      },
+      addMessage(root, { message }, context) {
+        logger.log({
+          level: "info",
+          message: "Message was created"
+        });
+
+        return User.findAll().then(users => {
+          const usersRow = users[0];
+
+          return Message.create({
+            ...message
+          }).then(newMessage =>
+            Promise.all([
+              newMessage.setUser(usersRow.id),
+              newMessage.setChat(message.chatId)
+            ]).then(() => newMessage)
+          );
+        });
       }
     }
   };
