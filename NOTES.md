@@ -603,3 +603,8 @@ now run the chats query again!
 
 We also want to be able to query for just one chat.
 
+### create new chat
+
+the best way to do this is to accept a list of user ids that also allows the creation of group chats
+
+- we now have a working backend infrastructure with a db storage
