@@ -508,3 +508,35 @@ mutation addPost($post : PostInput!) {
   }
 }
 ```
+
+### Many to Many Relationships
+
+We are going to add Chat and Message Entity
+
+Plan:
+
+A user can have multiple chats and a chat can belong to multiple users. This allows us to have group chats.
+
+With many to many relationships we need to join the tables for each entity in MySQL.
+
+These are called Join Tables
+
+Instead of using a foreign key on the chat or a user to save the relationship, we have a table called user_chats. The user's ID and the chats ID are associated with each other inside of this table. If a user participates in multiple chats, they will have multiple rows in this table, with different chat IDs.
+
+#### Chat Model
+
+A chat itself does not store any data, we use it for grouping specific users messages.
+
+create chat model and migration:
+
+`sequelize model:generate --models-path src/server/models --migrations-path src/server/migrations --name Chat --attributes firstName:string,lastName:string,email:string`
+
+generate migration for the association table:
+
+`sequelize migration:create --migrations-path src/server/migrations --name create-user-chats`
+
+A separate file for the association table is not needed, because we can reply on this table in the models where the association is required
+
+Rerun the migrations 
+
+`sequelize db:migrate --migrations-path src/server/migrations --config src/server/config/index.js`
