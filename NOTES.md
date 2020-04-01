@@ -537,7 +537,7 @@ generate migration for the association table:
 
 A separate file for the association table is not needed, because we can reply on this table in the models where the association is required
 
-Rerun the migrations 
+Rerun the migrations
 
 `sequelize db:migrate --migrations-path src/server/migrations --config src/server/config/index.js`
 
@@ -546,3 +546,33 @@ Rerun the migrations
 a message is like a post except that it is only readable inside a chat and is not public to everyone
 
 `sequelize model:generate --models-path src/server/models --migrations-path src/server/migrations --name Message --attributes text:string,userId:integer,chatId:integer`
+
+### Chats and messages in graphql
+
+We have introduced some new entities in the form of messages and chats. Let's include them in our GraphQL Schema.
+
+- user now gets an ID field
+- new message type
+- new chat type
+- new rootquery called chats
+
+you should now be able to query for an empty field of chats
+
+```JSON
+{
+  chats {
+    id
+    users {
+      id
+    }
+    messages {
+      id
+      text
+      user {
+        id
+        username
+      }
+    }
+  }
+}
+```
