@@ -32,12 +32,20 @@ export default function resolver() {
       posts(root, args, context) {
         return Post.findAll({ order: [["createdAt", "DESC"]] });
       },
-      // returns all chat fields as in our schema
-      // until we get auth working we will statically use the first user when requesting for chats
+      chat(root, { chatId }, context) {
+        return Chat.findById(chatId, {
+          include: [
+            {
+              model: User,
+              required: true
+            },
+            {
+              model: Message
+            }
+          ]
+        });
+      },
       chats(root, args, context) {
-        // we are using findAll and joining the users of any returned chat
-        // for this we use the include property of sequelize on the user model withing the findAll method
-        //
         return User.findAll().then(users => {
           if (!users.length) {
             return [];
