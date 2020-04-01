@@ -540,3 +540,9 @@ A separate file for the association table is not needed, because we can reply on
 Rerun the migrations 
 
 `sequelize db:migrate --migrations-path src/server/migrations --config src/server/config/index.js`
+
+#### message model
+
+a message is like a post except that it is only readable inside a chat and is not public to everyone
+
+`sequelize model:generate --models-path src/server/models --migrations-path src/server/migrations --name Message --attributes text:string,userId:integer,chatId:integer`

@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
     {}
   );
   Chat.associate = function(models) {
-    // The through property tells Sequelize that the two models are related via the users_chats table
     Chat.belongsToMany(models.User, { through: "users_chats" });
+    Chat.hasMany(models.Message);
   };
   return Chat;
 };
