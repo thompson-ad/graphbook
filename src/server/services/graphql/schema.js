@@ -22,7 +22,6 @@ const typeDefinitions = `
   type RootMutation {
     addPost (
       post: PostInput!
-      user: UserInput!
     ): Post
   }
 
