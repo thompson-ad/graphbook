@@ -643,3 +643,6 @@ The response looks much like what we would expect when sending the requests in t
 Loading - indicates whether the query is still running or has finished
 networkStatus - goes beyond loading and gives you the exact status of what happened. The numbers and their meaning can be found in the official docs
 stale - is set whenever data is missing
+
+### Binding the Apollo client to react
+
