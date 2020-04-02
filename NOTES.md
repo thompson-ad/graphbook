@@ -608,3 +608,22 @@ We also want to be able to query for just one chat.
 the best way to do this is to accept a list of user ids that also allows the creation of group chats
 
 - we now have a working backend infrastructure with a db storage
+
+## Integrating Apollo into the backend
+
+React helps us to view and update our data by building a user interface.
+
+### Setting up Apollo Client
+
+Apollo Client is a graphql client that allows us to easily fetch data from our GraphQL API.
+
+In addition to these special client libraries you could also use fetch or XMLHttpRequest. The disadvantage here is that you will need to implement caching, write request objects and integrate the request method into your app on your own.
+
+We need to install quite a few packages just to get it going but luckily each package is pretty small.
+
+1. Apollo Client - the wrapping package for all the packages that we installed
+2. Apollo-cache-inmemory - manages all state and cache dynamics (does not rely on redux)
+3. Apollo-link-http - implements the methods to send your GraphQL request through HTTP.
+4. Apollo link error - handles all errors that occur during a request to Apollo
+5. Apollo link - is an interface that the other link packages rely on. It allows them to adjust request and responses according to your requirements
+6.react-apollo - manages the communication between the browser DOM and the virtual DOM of react. Any changes made to the shadow DOM are transferred to the real DOM.
