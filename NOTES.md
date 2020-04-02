@@ -626,4 +626,20 @@ We need to install quite a few packages just to get it going but luckily each pa
 3. Apollo-link-http - implements the methods to send your GraphQL request through HTTP.
 4. Apollo link error - handles all errors that occur during a request to Apollo
 5. Apollo link - is an interface that the other link packages rely on. It allows them to adjust request and responses according to your requirements
-6.react-apollo - manages the communication between the browser DOM and the virtual DOM of react. Any changes made to the shadow DOM are transferred to the real DOM.
+   6.react-apollo - manages the communication between the browser DOM and the virtual DOM of react. Any changes made to the shadow DOM are transferred to the real DOM.
+
+### Testing the Apollo Client
+
+Before inserting GraphQL into react we should test it.
+
+We will write some temporary code to send our first graphQL query.
+
+After testing our GQL Client we will remove the code again.
+
+you will see the out put in the console after your start up the dev server and the dev client.
+
+The response looks much like what we would expect when sending the requests in the backend except now we have loading, networkStatus and stale.
+
+Loading - indicates whether the query is still running or has finished
+networkStatus - goes beyond loading and gives you the exact status of what happened. The numbers and their meaning can be found in the official docs
+stale - is set whenever data is missing
