@@ -656,3 +656,7 @@ There are two main approaches offered by Apollo that can be used to request data
 #### The Apollo HoC Query
 
 HoC - function that takes a component as an input and returns a new component.
+
+### Mutations with Apollo Client
+
+We will use the mutation component
