@@ -1,28 +1,23 @@
 import React, { Component } from "react";
+import gql from "graphql-tag";
+import graphql from "react-apollo";
 import "../../assets/css/style.css";
 
-const posts = [
+// Query
+const GET_POSTS = gql`
   {
-    id: 2,
-    text: "lorem ipsum",
-    user: {
-      avatar: "/uploads/avatar1.png",
-      username: "Test User"
-    }
-  },
-  {
-    id: 1,
-    text: "lorem ipsum",
-    user: {
-      avatar: "/uploads/avatar2.png",
-      username: "Test User 2"
+    posts {
+      id
+      text
+      user {
+        avatar
+        username
+      }
     }
   }
-];
-
-export default class Feed extends Component {
+`;
+class Feed extends Component {
   state = {
-    posts: posts,
     postContent: ""
   };
 
@@ -47,7 +42,17 @@ export default class Feed extends Component {
   };
 
   render() {
-    const { posts, postContent } = this.state;
+    const { posts, loading, error } = this.props;
+    const { postContent } = this.state;
+
+    if (loading) {
+      return "loading";
+    }
+
+    if (error) {
+      return error.message;
+    }
+
     return (
       <div className="container">
         <div className="postForm">
@@ -75,3 +80,10 @@ export default class Feed extends Component {
     );
   }
 }
+
+// Graphql accepts the query as the first parameter
+// the second parameter allows is to map the result of the HoC to specific properties of the child component
+// the post, loading and error parameters are passed as properties to the feed component
+export default graphql(GET_POSTS, {
+  props: ({ data: { loading, error, posts } }) => ({ loading, posts, error })
+})(Feed);
