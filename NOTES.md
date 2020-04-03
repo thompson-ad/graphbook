@@ -646,3 +646,13 @@ stale - is set whenever data is missing
 
 ### Binding the Apollo client to react
 
+### Querying React with Apollo
+
+There are two main approaches offered by Apollo that can be used to request data.
+
+1. The higher order component
+2. Query component
+
+#### The Apollo HoC Query
+
+HoC - function that takes a component as an input and returns a new component.
