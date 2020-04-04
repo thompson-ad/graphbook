@@ -676,3 +676,10 @@ Refetching makes sense if further logic is implemented on the server which is hi
 
 updating the cache makes sense when updating items in a list like our post feed. The client can insert a new post at the top of the feed.
 
+### Optimistic UI
+
+Apollo provides a great feature where the UI can be updated in an optimistic manner.
+
+At the moment we only add the posts that we send on our own but do not receive any information about new posts from other people so we will implement that now.
+
+
