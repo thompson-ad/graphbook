@@ -70,15 +70,25 @@ export default class Feed extends Component {
               <div className="postForm">
                 <Mutation
                   mutation={ADD_POST}
-                  // We only want to add the new post to the cache of the Apollo Client
-                  // using the cache helps us to save data by not refetching the entire list.
-                  // the update property runs when the GraphQL addPost mutation has finished
-                  // The first parameter that it receives is the store of the Apollo client in which the whole cache is saved
-                  // The second parameter is the returned response from our graphql API
                   update={(store, { data: { addPost } }) => {
                     const data = store.readQuery({ query: GET_POSTS });
                     data.posts.unshift(addPost);
                     store.writeQuery({ query: GET_POSTS, data });
+                  }}
+                  // The optimistic response can be anything from a function to a simple object
+                  // The return value needs to be a graphql response object
+                  optimisticResponse={{
+                    __typename: "mutation",
+                    addPost: {
+                      __typename: "Post",
+                      text: postContent,
+                      id: -1,
+                      user: {
+                        __typename: "User",
+                        username: "Loading...",
+                        avatar: "/public/loading.gif",
+                      },
+                    },
                   }}
                 >
                   {(addPost) => (
@@ -104,7 +114,10 @@ export default class Feed extends Component {
               </div>
               <div className="feed">
                 {posts.map((post, id) => (
-                  <div key={post.id} className="post">
+                  <div
+                    key={post.id}
+                    className={"post " + (post.id < 0 ? "optimistic" : "")}
+                  >
                     <div className="header">
                       <img src={post.user.avatar} />
                       <h2>{post.user.username}</h2>
