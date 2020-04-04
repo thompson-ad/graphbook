@@ -31,26 +31,26 @@ const ADD_POST = gql`
 
 export default class Feed extends Component {
   state = {
-    postContent: ""
+    postContent: "",
   };
 
-  handlePostContentChange = event => {
+  handlePostContentChange = (event) => {
     this.setState({ postContent: event.target.value });
   };
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault();
     const newPost = {
       id: this.state.posts.length + 1,
       text: this.state.postContent,
       user: {
         avatar: "/uploads/avatar1.png",
-        username: "Fake User"
-      }
+        username: "Fake User",
+      },
     };
-    this.setState(prevState => ({
+    this.setState((prevState) => ({
       posts: [newPost, ...prevState.posts],
-      postContent: ""
+      postContent: "",
     }));
   };
 
@@ -68,15 +68,27 @@ export default class Feed extends Component {
           return (
             <div className="container">
               <div className="postForm">
-                <Mutation mutation={ADD_POST}>
-                  {addPost => (
+                <Mutation
+                  mutation={ADD_POST}
+                  // We only want to add the new post to the cache of the Apollo Client
+                  // using the cache helps us to save data by not refetching the entire list.
+                  // the update property runs when the GraphQL addPost mutation has finished
+                  // The first parameter that it receives is the store of the Apollo client in which the whole cache is saved
+                  // The second parameter is the returned response from our graphql API
+                  update={(store, { data: { addPost } }) => {
+                    const data = store.readQuery({ query: GET_POSTS });
+                    data.posts.unshift(addPost);
+                    store.writeQuery({ query: GET_POSTS, data });
+                  }}
+                >
+                  {(addPost) => (
                     <form
-                      onSubmit={e => {
+                      onSubmit={(e) => {
                         e.preventDefault();
                         addPost({
-                          variables: { post: { text: postContent } }
+                          variables: { post: { text: postContent } },
                         }).then(() => {
-                          self.setState(prevState => ({ postContent: "" }));
+                          self.setState((prevState) => ({ postContent: "" }));
                         });
                       }}
                     >

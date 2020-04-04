@@ -660,3 +660,19 @@ HoC - function that takes a component as an input and returns a new component.
 ### Mutations with Apollo Client
 
 We will use the mutation component
+
+### updating the ui with the Apollo Client
+
+After running the addPost mutation, the request goes through the server and saves the new post in our database without any problems.
+
+However, we still cannot see the changes in the UI.
+
+There are two different ways to update the UI after a mutation
+
+1. Refetching the dataset - easy to implement but inefficient
+2. updating the cache according to the inserted data
+
+Refetching makes sense if further logic is implemented on the server which is hidden from the client when requesting data.
+
+updating the cache makes sense when updating items in a list like our post feed. The client can insert a new post at the top of the feed.
+
