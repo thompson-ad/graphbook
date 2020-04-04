@@ -682,4 +682,14 @@ Apollo provides a great feature where the UI can be updated in an optimistic man
 
 At the moment we only add the posts that we send on our own but do not receive any information about new posts from other people so we will implement that now.
 
+### Polling
 
+Polling is nothing more than rerunning a request after a specified interval. This procedure is the simplest way to implement real-time updates for our news feed.
+
+There are a couple of problem with polling
+
+1. it is inefficient to send requests without knowing whether there is any new data
+2. If we directly send the initial request again we will get all of the posts including those that we are already showing
+3. When sending requests, the server needs to query the database and calculate everything money and time.
+
+We can use Apollo Subscriptions but we will implement those later
