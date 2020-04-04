@@ -31,6 +31,7 @@ const typeDefinitions = `
     id: Int
     messages: [Message]
     users: [User]
+    lastMessage: Message
   }
 
   input ChatInput {

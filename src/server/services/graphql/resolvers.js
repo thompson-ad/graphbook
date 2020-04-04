@@ -8,7 +8,7 @@ export default function resolver() {
     Post: {
       user(post, args, context) {
         return post.getUser();
-      }
+      },
     },
     Message: {
       user(message, args, context) {
@@ -16,7 +16,7 @@ export default function resolver() {
       },
       chat(message, args, context) {
         return message.getChat();
-      }
+      },
     },
     // run getMessages and getUsers to retrieve all joined data
     // all messages are sorted by ID in the ascending order
@@ -26,7 +26,15 @@ export default function resolver() {
       },
       users(chat, args, context) {
         return chat.getUsers();
-      }
+      },
+      lastMessage(chat, args, context) {
+        return (
+          chat
+            .getMessages({ limit: 1, order: [["id", "DESC"]] })
+            // need to pull out the value from the array as an array is not a valid response from the schema
+            .then((message) => message[0])
+        );
+      },
     },
     RootQuery: {
       posts(root, args, context) {
@@ -37,16 +45,16 @@ export default function resolver() {
           include: [
             {
               model: User,
-              required: true
+              required: true,
             },
             {
-              model: Message
-            }
-          ]
+              model: Message,
+            },
+          ],
         });
       },
       chats(root, args, context) {
-        return User.findAll().then(users => {
+        return User.findAll().then((users) => {
           if (!users.length) {
             return [];
           }
@@ -58,30 +66,30 @@ export default function resolver() {
               {
                 model: User,
                 required: true,
-                through: { where: { userId: usersRow.id } }
+                through: { where: { userId: usersRow.id } },
               },
               {
-                model: Message
-              }
-            ]
+                model: Message,
+              },
+            ],
           });
         });
-      }
+      },
     },
     RootMutation: {
       addPost(root, { post }, context) {
         logger.log({
           level: "info",
-          message: "Post was created"
+          message: "Post was created",
         });
         // we retrieve all users from the db
-        return User.findAll().then(users => {
+        return User.findAll().then((users) => {
           const usersRow = users[0];
           // we insert the post into our db with create. We pass the post object from the original request, which only holds the test of the post.
           return Post.create({
-            ...post
+            ...post,
             // Set the userId on the post
-          }).then(newPost =>
+          }).then((newPost) =>
             Promise.all([newPost.setUser(usersRow.id)]).then(() => newPost)
           );
         });
@@ -89,9 +97,9 @@ export default function resolver() {
       addChat(root, { chat }, context) {
         logger.log({
           level: "info",
-          message: "Message was created"
+          message: "Message was created",
         });
-        return Chat.create().then(newChat =>
+        return Chat.create().then((newChat) =>
           // sequelize added the setUsers function to the chat model instance
           // it was added because of the associations using the belongsToMany method in the chat model
           // There we can directly provide an array of user ids that should be associated with the new chat, through the users_chats table
@@ -101,23 +109,23 @@ export default function resolver() {
       addMessage(root, { message }, context) {
         logger.log({
           level: "info",
-          message: "Message was created"
+          message: "Message was created",
         });
 
-        return User.findAll().then(users => {
+        return User.findAll().then((users) => {
           const usersRow = users[0];
 
           return Message.create({
-            ...message
-          }).then(newMessage =>
+            ...message,
+          }).then((newMessage) =>
             Promise.all([
               newMessage.setUser(usersRow.id),
-              newMessage.setChat(message.chatId)
+              newMessage.setChat(message.chatId),
             ]).then(() => newMessage)
           );
         });
-      }
-    }
+      },
+    },
   };
   return resolvers;
 }

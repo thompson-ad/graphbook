@@ -693,3 +693,15 @@ There are a couple of problem with polling
 3. When sending requests, the server needs to query the database and calculate everything money and time.
 
 We can use Apollo Subscriptions but we will implement those later
+
+## Implementing chats and messages
+
+authentication, real-time subscriptions and friend relationships
+
+### Fetching and displaying chats
+
+Our news feed is working as we expected Now we also want to cover chats
+
+We need to Query for every chat that the current user is associated with
+
+First lets get the rendering working with some demo chats
