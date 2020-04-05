@@ -730,4 +730,8 @@ Introducing the infinite scroller in react is a great way to allow user to load 
 
 A component is uncontrolled whenever the value is not set by a property through React, but only saved and taken from the real browser DOM. The value of an input is then retrieved from a reference to the DOM Node and is not managed and taken from Reacts component state.
 
+### Stateless Functions
+
+A lot of the react we have written can be written as stateless functions
+
 
