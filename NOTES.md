@@ -711,3 +711,13 @@ First lets get the rendering working with some demo chats
 First we have to store the chats that were opened by a click from the user.
 
 Every chat is displayed is a separate, small chat window, like in facebook.
+
+### Pagination in React and GraphQL
+
+by pagination most of the tim ewe mean the batch querying of data. Currently, we query for all posts, chats, and messages in ou database. If you think about how much data a chat can store you'll realise that it is unrealistic to query for all of this data at once.
+
+A better solution is to use pagination
+
+We will look at how to use pagination with the posts feed.
+
+Introducing the infinite scroller in react is a great way to allow user to load more when they get to the bottom of your page.
