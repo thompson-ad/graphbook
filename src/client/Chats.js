@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import gql from "graphql-tag";
+import Loading from "./components/Loading";
 import { Query } from "react-apollo";
 
 const GET_CHATS = gql`
@@ -98,7 +99,7 @@ export default class Chats extends Component {
         <div className="chats">
           <Query query={GET_CHATS}>
             {({ loading, error, data }) => {
-              if (loading) return <p>Loading...</p>;
+              if (loading) return <Loading />;
               if (error) return error.message;
 
               const { chats } = data;
