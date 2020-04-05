@@ -705,3 +705,9 @@ Our news feed is working as we expected Now we also want to cover chats
 We need to Query for every chat that the current user is associated with
 
 First lets get the rendering working with some demo chats
+
+### Fetching and displaying messages
+
+First we have to store the chats that were opened by a click from the user.
+
+Every chat is displayed is a separate, small chat window, like in facebook.
