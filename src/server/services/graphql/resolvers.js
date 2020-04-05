@@ -1,8 +1,14 @@
+import Sequelize from "sequelize";
 import logger from "../../helpers/logger";
+
+const { Op } = Sequelize;
 
 export default function resolver() {
   const { db } = this;
-  const { Post, User, Chat, Message } = db.models;
+  const {
+    Post, User, Chat, Message,
+  } = db.models;
+
 
   const resolvers = {
     Post: {
@@ -18,8 +24,6 @@ export default function resolver() {
         return message.getChat();
       },
     },
-    // run getMessages and getUsers to retrieve all joined data
-    // all messages are sorted by ID in the ascending order
     Chat: {
       messages(chat, args, context) {
         return chat.getMessages({ order: [["id", "ASC"]] });
@@ -28,12 +32,7 @@ export default function resolver() {
         return chat.getUsers();
       },
       lastMessage(chat, args, context) {
-        return (
-          chat
-            .getMessages({ limit: 1, order: [["id", "DESC"]] })
-            // need to pull out the value from the array as an array is not a valid response from the schema
-            .then((message) => message[0])
-        );
+        return chat.getMessages({ limit: 1, order: [["id", "DESC"]] }).then(message => message[0]);
       },
     },
     RootQuery: {
@@ -42,15 +41,13 @@ export default function resolver() {
       },
       chat(root, { chatId }, context) {
         return Chat.findById(chatId, {
-          include: [
-            {
-              model: User,
-              required: true,
-            },
-            {
-              model: Message,
-            },
-          ],
+          include: [{
+            model: User,
+            required: true,
+          },
+          {
+            model: Message,
+          }],
         });
       },
       chats(root, args, context) {
@@ -60,18 +57,16 @@ export default function resolver() {
           }
 
           const usersRow = users[0];
-          // join all available messages for each chat
+
           return Chat.findAll({
-            include: [
-              {
-                model: User,
-                required: true,
-                through: { where: { userId: usersRow.id } },
-              },
-              {
-                model: Message,
-              },
-            ],
+            include: [{
+              model: User,
+              required: true,
+              through: { where: { userId: usersRow.id } },
+            },
+            {
+              model: Message,
+            }],
           });
         });
       },
@@ -95,6 +90,32 @@ export default function resolver() {
           posts: Post.findAll(query),
         };
       },
+      usersSearch(root, { page, limit, text }, context) {
+        if (text.length < 3) {
+          return {
+            users: [],
+          };
+        }
+        let skip = 0;
+        if (page && limit) {
+          skip = page * limit;
+        }
+        const query = {
+          order: [["createdAt", "DESC"]],
+          offset: skip,
+        };
+        if (limit) {
+          query.limit = limit;
+        }
+        query.where = {
+          username: {
+            [Op.like]: `%${text}%`,
+          },
+        };
+        return {
+          users: User.findAll(query),
+        };
+      },
     },
     RootMutation: {
       addPost(root, { post }, context) {
@@ -102,16 +123,15 @@ export default function resolver() {
           level: "info",
           message: "Post was created",
         });
-        // we retrieve all users from the db
+
         return User.findAll().then((users) => {
           const usersRow = users[0];
-          // we insert the post into our db with create. We pass the post object from the original request, which only holds the test of the post.
+
           return Post.create({
             ...post,
-            // Set the userId on the post
-          }).then((newPost) =>
-            Promise.all([newPost.setUser(usersRow.id)]).then(() => newPost)
-          );
+          }).then(newPost => Promise.all([
+            newPost.setUser(usersRow.id),
+          ]).then(() => newPost));
         });
       },
       addChat(root, { chat }, context) {
@@ -119,12 +139,9 @@ export default function resolver() {
           level: "info",
           message: "Message was created",
         });
-        return Chat.create().then((newChat) =>
-          // sequelize added the setUsers function to the chat model instance
-          // it was added because of the associations using the belongsToMany method in the chat model
-          // There we can directly provide an array of user ids that should be associated with the new chat, through the users_chats table
-          Promise.all([newChat.setUsers(chat.users)]).then(() => newChat)
-        );
+        return Chat.create().then(newChat => Promise.all([
+          newChat.setUsers(chat.users),
+        ]).then(() => newChat));
       },
       addMessage(root, { message }, context) {
         logger.log({
@@ -137,15 +154,58 @@ export default function resolver() {
 
           return Message.create({
             ...message,
-          }).then((newMessage) =>
-            Promise.all([
-              newMessage.setUser(usersRow.id),
-              newMessage.setChat(message.chatId),
-            ]).then(() => newMessage)
-          );
+          }).then(newMessage => Promise.all([
+            newMessage.setUser(usersRow.id),
+            newMessage.setChat(message.chatId),
+          ]).then(() => newMessage));
+        });
+      },
+      updatePost(root, { post, postId }, context) {
+        return Post.update({
+          ...post,
+        },
+        {
+          where: {
+            id: postId,
+          },
+        }).then((rows) => {
+          if (rows[0] === 1) {
+            logger.log({
+              level: "info",
+              message: `Post ${postId} was updated`,
+            });
+
+            return Post.findById(postId);
+          }
+        });
+      },
+      deletePost(root, { postId }, context) {
+        return Post.destroy({
+          where: {
+            id: postId,
+          },
+        }).then((rows) => {
+          if (rows === 1) {
+            logger.log({
+              level: "info",
+              message: `Post ${postId}was deleted`,
+            });
+            return {
+              success: true,
+            };
+          }
+          return {
+            success: false,
+          };
+        }, (err) => {
+          logger.log({
+            level: "error",
+            message: err.message,
+          });
         });
       },
     },
   };
+
   return resolvers;
 }

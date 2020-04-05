@@ -11,20 +11,11 @@ const typeDefinitions = `
     user: User
   }
 
-  input PostInput {
-    text: String!
-  }
-
   type Message {
     id: Int
     text: String
     chat: Chat
     user: User
-  }
-
-  input MessageInput {
-    text: String!
-    chatId: Int!
   }
 
   type Chat {
@@ -38,13 +29,30 @@ const typeDefinitions = `
     posts: [Post]
   }
 
-  input ChatInput {
-    users: [Int]
+  input PostInput {
+    text: String!
   }
   
   input UserInput {
     username: String!
     avatar: String!
+  }
+
+  input ChatInput {
+    users: [Int]
+  }
+
+  input MessageInput {
+    text: String!
+    chatId: Int!
+  }
+
+  type Response {
+    success: Boolean
+  }
+
+  type UsersSearch {
+    users: [User]
   }
   
   type RootMutation {
@@ -57,6 +65,13 @@ const typeDefinitions = `
     addMessage (
       message: MessageInput!
     ): Message
+    updatePost (
+      post: PostInput!
+      postId: Int!
+    ): Post
+    deletePost (
+      postId: Int!
+    ): Response
   }
 
   type RootQuery {
@@ -64,6 +79,7 @@ const typeDefinitions = `
     chats: [Chat]
     chat(chatId: Int): Chat
     postsFeed(page: Int, limit: Int): PostFeed
+    usersSearch(page: Int, limit: Int, text: String!): UsersSearch
   }
 
   schema {
