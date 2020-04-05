@@ -33,11 +33,10 @@ const ADD_POST = gql`
 `;
 
 export default class Feed extends Component {
-  state = {
-    postContent: "",
-    hasMore: true,
-    page: 0,
-  };
+  constructor(props) {
+    super(props);
+    this.textArea = React.createRef();
+  }
 
   handlePostContentChange = (event) => {
     this.setState({ postContent: event.target.value });
@@ -91,8 +90,6 @@ export default class Feed extends Component {
 
   render() {
     const self = this;
-    const { postContent, hasMore } = this.state;
-
     return (
       <Query query={GET_POSTS} variables={{ page: 0, limit: 10 }}>
         {({ loading, error, data, fetchMore }) => {
@@ -134,15 +131,14 @@ export default class Feed extends Component {
                       onSubmit={(e) => {
                         e.preventDefault();
                         addPost({
-                          variables: { post: { text: postContent } },
-                        }).then(() => {
-                          self.setState((prevState) => ({ postContent: "" }));
+                          variables: {
+                            post: { text: self.textArea.current.value },
+                          },
                         });
                       }}
                     >
                       <textarea
-                        value={postContent}
-                        onChange={self.handlePostContentChange}
+                        ref={this.textArea}
                         placeholder="Write your custom post!"
                       />
                       <input type="submit" value="Submit" />

@@ -721,3 +721,13 @@ A better solution is to use pagination
 We will look at how to use pagination with the posts feed.
 
 Introducing the infinite scroller in react is a great way to allow user to load more when they get to the bottom of your page.
+
+## Reusable React Components
+
+### React Patterns
+
+#### Controlled Components
+
+A component is uncontrolled whenever the value is not set by a property through React, but only saved and taken from the real browser DOM. The value of an input is then retrieved from a reference to the DOM Node and is not managed and taken from Reacts component state.
+
+
