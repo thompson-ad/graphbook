@@ -24,6 +24,7 @@
     "react-apollo": "^2.3.3",
     "react-dom": "^16.6.3",
     "react-helmet": "^5.2.1",
+    "react-infinite-scroller": "^1.2.4",
     "express": "^4.16.4",
     "graphql": "^14.0.2",
     "graphql-tag": "^2.10.0",
