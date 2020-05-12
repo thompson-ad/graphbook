@@ -1,14 +1,15 @@
 import Sequelize from "sequelize";
+import bcrypt from "bcrypt";
+import JWT from "jsonwebtoken";
 import logger from "../../helpers/logger";
+
+const { JWT_SECRET } = process.env;
 
 const { Op } = Sequelize;
 
 export default function resolver() {
   const { db } = this;
-  const {
-    Post, User, Chat, Message,
-  } = db.models;
-
+  const { Post, User, Chat, Message } = db.models;
 
   const resolvers = {
     Post: {
@@ -32,7 +33,9 @@ export default function resolver() {
         return chat.getUsers();
       },
       lastMessage(chat, args, context) {
-        return chat.getMessages({ limit: 1, order: [["id", "DESC"]] }).then(message => message[0]);
+        return chat
+          .getMessages({ limit: 1, order: [["id", "DESC"]] })
+          .then((message) => message[0]);
       },
     },
     RootQuery: {
@@ -41,13 +44,15 @@ export default function resolver() {
       },
       chat(root, { chatId }, context) {
         return Chat.findById(chatId, {
-          include: [{
-            model: User,
-            required: true,
-          },
-          {
-            model: Message,
-          }],
+          include: [
+            {
+              model: User,
+              required: true,
+            },
+            {
+              model: Message,
+            },
+          ],
         });
       },
       chats(root, args, context) {
@@ -59,14 +64,16 @@ export default function resolver() {
           const usersRow = users[0];
 
           return Chat.findAll({
-            include: [{
-              model: User,
-              required: true,
-              through: { where: { userId: usersRow.id } },
-            },
-            {
-              model: Message,
-            }],
+            include: [
+              {
+                model: User,
+                required: true,
+                through: { where: { userId: usersRow.id } },
+              },
+              {
+                model: Message,
+              },
+            ],
           });
         });
       },
@@ -129,9 +136,9 @@ export default function resolver() {
 
           return Post.create({
             ...post,
-          }).then(newPost => Promise.all([
-            newPost.setUser(usersRow.id),
-          ]).then(() => newPost));
+          }).then((newPost) =>
+            Promise.all([newPost.setUser(usersRow.id)]).then(() => newPost)
+          );
         });
       },
       addChat(root, { chat }, context) {
@@ -139,9 +146,9 @@ export default function resolver() {
           level: "info",
           message: "Message was created",
         });
-        return Chat.create().then(newChat => Promise.all([
-          newChat.setUsers(chat.users),
-        ]).then(() => newChat));
+        return Chat.create().then((newChat) =>
+          Promise.all([newChat.setUsers(chat.users)]).then(() => newChat)
+        );
       },
       addMessage(root, { message }, context) {
         logger.log({
@@ -154,21 +161,25 @@ export default function resolver() {
 
           return Message.create({
             ...message,
-          }).then(newMessage => Promise.all([
-            newMessage.setUser(usersRow.id),
-            newMessage.setChat(message.chatId),
-          ]).then(() => newMessage));
+          }).then((newMessage) =>
+            Promise.all([
+              newMessage.setUser(usersRow.id),
+              newMessage.setChat(message.chatId),
+            ]).then(() => newMessage)
+          );
         });
       },
       updatePost(root, { post, postId }, context) {
-        return Post.update({
-          ...post,
-        },
-        {
-          where: {
-            id: postId,
+        return Post.update(
+          {
+            ...post,
           },
-        }).then((rows) => {
+          {
+            where: {
+              id: postId,
+            },
+          }
+        ).then((rows) => {
           if (rows[0] === 1) {
             logger.log({
               level: "info",
@@ -184,24 +195,52 @@ export default function resolver() {
           where: {
             id: postId,
           },
-        }).then((rows) => {
-          if (rows === 1) {
-            logger.log({
-              level: "info",
-              message: `Post ${postId}was deleted`,
-            });
+        }).then(
+          (rows) => {
+            if (rows === 1) {
+              logger.log({
+                level: "info",
+                message: `Post ${postId}was deleted`,
+              });
+              return {
+                success: true,
+              };
+            }
             return {
-              success: true,
+              success: false,
             };
+          },
+          (err) => {
+            logger.log({
+              level: "error",
+              message: err.message,
+            });
           }
-          return {
-            success: false,
-          };
-        }, (err) => {
-          logger.log({
-            level: "error",
-            message: err.message,
-          });
+        );
+      },
+      login(root, { email, password }, context) {
+        return User.findAll({
+          where: {
+            email,
+          },
+          raw: true,
+        }).then(async (users) => {
+          if ((users.length = 1)) {
+            const user = users[0];
+            const passwordValid = await bcrypt.compare(password, user.password);
+            if (!passwordValid) {
+              throw new Error("Password does not match");
+            }
+            const token = JWT.sign({ email, id: user.id }, JWT_SECRET, {
+              expiresIn: "1d",
+            });
+
+            return {
+              token,
+            };
+          } else {
+            throw new Error("User not found");
+          }
         });
       },
     },
