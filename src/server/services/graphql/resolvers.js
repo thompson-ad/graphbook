@@ -1,11 +1,10 @@
+import logger from "../../helpers/logger";
 import Sequelize from "sequelize";
 import bcrypt from "bcrypt";
 import JWT from "jsonwebtoken";
-import logger from "../../helpers/logger";
 
+const Op = Sequelize.Op;
 const { JWT_SECRET } = process.env;
-
-const { Op } = Sequelize;
 
 export default function resolver() {
   const { db } = this;
@@ -35,10 +34,15 @@ export default function resolver() {
       lastMessage(chat, args, context) {
         return chat
           .getMessages({ limit: 1, order: [["id", "DESC"]] })
-          .then((message) => message[0]);
+          .then((message) => {
+            return message[0];
+          });
       },
     },
     RootQuery: {
+      currentUser(root, args, context) {
+        return context.user;
+      },
       posts(root, args, context) {
         return Post.findAll({ order: [["createdAt", "DESC"]] });
       },
@@ -56,35 +60,27 @@ export default function resolver() {
         });
       },
       chats(root, args, context) {
-        return User.findAll().then((users) => {
-          if (!users.length) {
-            return [];
-          }
-
-          const usersRow = users[0];
-
-          return Chat.findAll({
-            include: [
-              {
-                model: User,
-                required: true,
-                through: { where: { userId: usersRow.id } },
-              },
-              {
-                model: Message,
-              },
-            ],
-          });
+        return Chat.findAll({
+          include: [
+            {
+              model: User,
+              required: true,
+              through: { where: { userId: context.user.id } },
+            },
+            {
+              model: Message,
+            },
+          ],
         });
       },
       postsFeed(root, { page, limit }, context) {
-        let skip = 0;
+        var skip = 0;
 
         if (page && limit) {
           skip = page * limit;
         }
 
-        const query = {
+        var query = {
           order: [["createdAt", "DESC"]],
           offset: skip,
         };
@@ -103,11 +99,11 @@ export default function resolver() {
             users: [],
           };
         }
-        let skip = 0;
+        var skip = 0;
         if (page && limit) {
           skip = page * limit;
         }
-        const query = {
+        var query = {
           order: [["createdAt", "DESC"]],
           offset: skip,
         };
@@ -116,7 +112,7 @@ export default function resolver() {
         }
         query.where = {
           username: {
-            [Op.like]: `%${text}%`,
+            [Op.like]: "%" + text + "%",
           },
         };
         return {
@@ -136,9 +132,11 @@ export default function resolver() {
 
           return Post.create({
             ...post,
-          }).then((newPost) =>
-            Promise.all([newPost.setUser(usersRow.id)]).then(() => newPost)
-          );
+          }).then((newPost) => {
+            return Promise.all([newPost.setUser(usersRow.id)]).then(() => {
+              return newPost;
+            });
+          });
         });
       },
       addChat(root, { chat }, context) {
@@ -146,27 +144,27 @@ export default function resolver() {
           level: "info",
           message: "Message was created",
         });
-        return Chat.create().then((newChat) =>
-          Promise.all([newChat.setUsers(chat.users)]).then(() => newChat)
-        );
+        return Chat.create().then((newChat) => {
+          return Promise.all([newChat.setUsers(chat.users)]).then(() => {
+            return newChat;
+          });
+        });
       },
       addMessage(root, { message }, context) {
         logger.log({
           level: "info",
           message: "Message was created",
         });
-
-        return User.findAll().then((users) => {
-          const usersRow = users[0];
-
-          return Message.create({
-            ...message,
-          }).then((newMessage) =>
-            Promise.all([
-              newMessage.setUser(usersRow.id),
-              newMessage.setChat(message.chatId),
-            ]).then(() => newMessage)
-          );
+        return Message.create({
+          ...message,
+        }).then((newMessage) => {
+          return Promise.all([
+            newMessage.setUser(context.user.id),
+            newMessage.setChat(message.chatId),
+          ]).then(() => {
+            pubsub.publish("messageAdded", { messageAdded: newMessage });
+            return newMessage;
+          });
         });
       },
       updatePost(root, { post, postId }, context) {
@@ -183,7 +181,7 @@ export default function resolver() {
           if (rows[0] === 1) {
             logger.log({
               level: "info",
-              message: `Post ${postId} was updated`,
+              message: "Post " + postId + " was updated",
             });
 
             return Post.findById(postId);
@@ -196,11 +194,11 @@ export default function resolver() {
             id: postId,
           },
         }).then(
-          (rows) => {
+          function (rows) {
             if (rows === 1) {
               logger.log({
                 level: "info",
-                message: `Post ${postId}was deleted`,
+                message: "Post " + postId + "was deleted",
               });
               return {
                 success: true,
@@ -210,7 +208,7 @@ export default function resolver() {
               success: false,
             };
           },
-          (err) => {
+          function (err) {
             logger.log({
               level: "error",
               message: err.message,
